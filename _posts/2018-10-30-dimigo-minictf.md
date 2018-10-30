@@ -190,7 +190,7 @@ GET으로 url을 받고 url에 request를 보내는데, 이를 이용해 localho
 
 ### Ti (250)
 
-**Server Side Template Injection**이 발생하며 단순하게 __\{\{config\}\}__로 플래그를 읽는 것이 가능하다.
+**Server Side Template Injection**이 발생하며 단순하게 \{\{config\}\} 로 플래그를 읽는 것이 가능하다.
 
 ..... RINT_REGULAR': False, 'TESTING': False, 'flag': 'flag{SSSSSTI}', 'PERMANENT_SESSION_LIFETIME .....
 
