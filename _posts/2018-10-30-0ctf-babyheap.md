@@ -149,7 +149,7 @@ smallbin을 free한 상태에서 main_arena+88을 dump로 leak하는 것이 가�
 
 ![heap](https://t1.daumcdn.net/cfile/tistory/99AC4F365BC73C7532)
 
-###### leak이 가능해진 상황의 heap 상황
+<center><h6>leak이 가능해진 상황의 heap 상황</h6></center>
 
 이후 leak한 libc base를 바탕으로 \_\_malloc_hook 근처 fastbin 크기 내 범위에 fastbin_dup_into_stack을 이용해 fake chunk를 할당한다면
 
