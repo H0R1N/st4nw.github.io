@@ -2,7 +2,7 @@
 layout: post
 title: "Dimigo MiniCTF 2018 Write-Up"
 date: 2018-10-30
-excerpt: "어쩌다 말 나와서 급하게 열렸던 내부 CTF Write-Up입니다."
+excerpt: "어쩌다 말 나와서 1학년  열렸던 내부 CTF Write-Up입니다."
 tags: [write-up]
 comments: true
 ---
