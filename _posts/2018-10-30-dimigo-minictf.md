@@ -1025,7 +1025,31 @@ done
 
 ### Nostradamus Revenge (150)
 
-랜덤 시드를 주고 랜덤값을 맞춰야 한다. 시드가 매번 달라지는데 import ctypes해서 맞춰주면 된다.
+랜덤 시드를 주고 랜덤값을 맞춰야 한다. 시드가 매번 달라지는데 libc 주었으니 import ctypes해서 맞춰주면 된다.
+
+```python
+from pwn import *
+from ctypes import *
+
+#p = process('./revenge')
+#c = CDLL("/lib/x86_64-linux-gnu/libc.so.6")
+c = CDLL("./libc.so.6")
+p = remote('c2w2m2.com', 5700)
+
+for i in range(0, 2000):
+	p.recvuntil('Seed : ')
+
+	seed = int(p.recvline())
+	c.srand(seed)
+	
+	guess= c.rand()
+	print 'Stage ' + str(i+1)
+	print 'Seed : ' + str(seed) + '// Answer : ' + str(guess)
+	p.sendline(str(guess))
+
+p.interactive()
+print p.recv()
+```
 
 **플래그 : flag{12312qweqwe}**
 
