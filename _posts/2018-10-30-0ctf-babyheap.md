@@ -135,25 +135,25 @@ chunk가 free 상태가 아닌 경우 user_data를 출력합니다. main_arena+8
 
 우선 눈여겨보아할 것은 fill에서 size 검사가 제대로 이루어지지 않아 heap overflow가 발생한다는 것인데, 이를 이용해 다른 chunk들의
 
-size나 fd, bk 값을 조작할 수 있는 것에서 exploit이 시작된다.
+size나 fd, bk 값을 조작할 수 있는 것에서 exploit이 시작됩니다.
 
 
 
-small bin 크기의 chunk를 2개 이상 할당하고 이를 free하면 unsorted bin에 들어가고, 이때 fd와 bk가 main_arena+88를 가르킨다.
+small bin 크기의 chunk를 2개 이상 할당하고 이를 free하면 unsorted bin에 들어가고, 이때 fd와 bk가 main_arena+88를 가르킵니다.
 
 그런데 heap overflow로 fd를 조작할 수 있다는 상황에서 ,
 
 만약 fastbin 크기의 chunk를 free하고, fd를 조작해 smallbin 크기의 chunk 위에 다시 calloc한다면 (chunk가 겹치는 상황)
 
-smallbin을 free한 상태에서 main_arena+88을 dump로 leak하는 것이 가능해진다.
+smallbin을 free한 상태에서 main_arena+88을 dump로 leak하는 것이 가능해집니다.
 
 ![heap](https://t1.daumcdn.net/cfile/tistory/99AC4F365BC73C7532)
 
 ###### leak이 가능해진 상황의 heap 상황
 
-이후 leak한 libc base를 바탕으로 __malloc_hook 근처 fastbin 크기 내 범위에 fastbin_dup_into_stack을 이용해 fake chunk를 할당한다면
+이후 leak한 libc base를 바탕으로 \_\_malloc_hook 근처 fastbin 크기 내 범위에 fastbin_dup_into_stack을 이용해 fake chunk를 할당한다면
 
-__malloc_hook을 oneshot gadget(magic gadget)으로 덮는 것이 가능해집니다. 그 이후 alloc을 한다면 oneshot gadget이 트리거됩니다.
+\_\_malloc_hook을 oneshot gadget(magic gadget)으로 덮는 것이 가능해집니다. 그 이후 alloc을 한다면 oneshot gadget이 트리거됩니다.
 
 exp.py
 ```python
