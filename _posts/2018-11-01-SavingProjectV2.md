@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "가디언즈 리그 5경기 - SavingProject_v2 Write-Up"
+title: "가디언즈 리그 5경기 - SavingProject_v2"
 date: 2018-11-01
 excerpt: "fastbin dup into heap"
 tags: [write-up]
