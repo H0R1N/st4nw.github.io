@@ -127,7 +127,7 @@ FSB에 입력할 값으로 %23$p 혹은 %31$p을 입력하면 leak이 가능합�
 
 system("/bin/cat flag")하는 함수가 존재하고 canary의 값까지 구했으니 이제 남은 것은
 
-1. Stack BOF에서 터지는 BOF로 간단하게 플래그를 읽는 것입니다.
+\1. Stack BOF에서 터지는 BOF로 간단하게 플래그를 읽는 것입니다.
 
 exp.py
 ```python
