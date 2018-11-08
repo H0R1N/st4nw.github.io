@@ -129,7 +129,7 @@ Create bullet시 47 바이트를 입력하면 Power up시 1 바이트를 입력�
 뒤에 NULL이 따라 붙기 때문에 47 + 1 바이트가 버퍼를 채우고 NULL이 power을 덮게 됩니다.
 
 strncat후 power이 0x00으로 덮인 상태에서
-```
+```c
 strncat(dest, &s, 48 - *(dest + 12));
 v3 = strlen(&s) + *(dest + 12);
 printf("Your new power is : %u\n", v3);
@@ -211,6 +211,3 @@ p.interactive()
 ```
 
 ![shell](https://t1.daumcdn.net/cfile/tistory/997AA93C5BE4228002)
-
-
-
