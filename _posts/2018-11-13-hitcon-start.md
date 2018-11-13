@@ -41,10 +41,13 @@ int __cdecl main(int argc, const char **argv, const char **envp)
   return 0;
 }
 ```
-main에서는 BOF를 대놓고 주는데 함수 목록을 보면 system / exec 계열이 없어서 syscall로 쉘을 따야 합니다.
+buf의 크기는 0x20 - 0x8인데 217만큼 입력받으므로 BOF가 발생합니다. 그 외에는 볼 것이 없습니다.
 
-canary는 쉽게 leak할 수 있으므로 read로 bss에 /bin/sh를 써준다음 execve syscall을 호출하면 됩니다.
+### Exploit
 
+우선 main에서 BOF를 대놓고 주는데 함수 목록을 보면 system / exec 계열이 없습니다. 따라서 syscall을 이용해야 합니다.
+
+canary는 쉽게 leak할 수 있으므로 read로 bss에 /bin/sh를 써준다음 execve syscall을 호출하면 쉘을 딸 수 있습니다.
 
 exp.py
 ```python
