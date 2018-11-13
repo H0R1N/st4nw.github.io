@@ -45,6 +45,7 @@ main에서는 BOF를 대놓고 주는데 함수 목록을 보면 system / exec �
 
 canary는 쉽게 leak할 수 있으므로 read로 bss에 /bin/sh를 써준다음 execve syscall을 호출하면 됩니다.
 
+
 exp.py
 ```python
 from pwn import *
