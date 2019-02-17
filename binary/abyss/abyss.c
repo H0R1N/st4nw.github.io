@@ -148,8 +148,8 @@ int main()
 			puts("Shiny sunlight greets you, as always.");
 			exit(1);
 		default:
-				puts("invalid");
-				exit(0);
+			puts("invalid");
+			exit(0);
 		}
 	}
 	return 0;
